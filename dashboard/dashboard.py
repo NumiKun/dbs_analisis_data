@@ -54,6 +54,3 @@ st.pyplot(fig)
 
 st.subheader("Statistik Deskriptif")
 st.write(merged_df[['PM2.5_df1', 'PM10_df1', 'PM2.5_df2', 'PM10_df2']].describe())
-
-if __name__ == '__main__':
-    st.run()
