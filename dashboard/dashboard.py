@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 @st.cache
 def load_data():
@@ -59,3 +60,17 @@ filtered_data_renamed = filtered_data.rename(columns={
 
 st.write(filtered_data_renamed[['PM2.5 Tiantan', 'PM10 Tiantan', 'PM2.5 Shunyi', 'PM10 Shunyi']].describe())
 
+st.subheader(f"Korelasi antara {pollutant_selected} dan Faktor Cuaca di Stasiun {station_selected}")
+
+pollutant_column = f'PM2.5_df1' if station_selected == "Tiantan" else f'PM2.5_df2'
+weather_columns = ['TEMP', 'PRES', 'DEWP', 'RAIN', 'WSPM']
+weather_columns = [f'{col}_df1' if station_selected == "Tiantan" else f'{col}_df2' for col in weather_columns]
+
+correlation_data = filtered_data[[pollutant_column] + weather_columns].corr()
+
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.heatmap(correlation_data, annot=True, cmap='coolwarm', vmin=-1, vmax=1, ax=ax)
+ax.set_title(f'Korelasi antara PM2.5 dan Faktor Cuaca di Stasiun {station_selected}')
+st.pyplot(fig)
+
+st.write(correlation_data[pollutant_column].sort_values(ascending=False))
